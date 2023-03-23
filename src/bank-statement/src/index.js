@@ -1,17 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import Login from './pages/Login/Login';
+import Home from './pages/Home/Home';
+import ResetPassword from './pages/Login/ResetPassword/ResetPassword'
 import reportWebVitals from './reportWebVitals';
+import { Route, BrowserRouter, Routes } from "react-router-dom";
+import { ChakraProvider } from '@chakra-ui/react'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <App />
+  <ChakraProvider>
+    <React.StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={ <Login /> }></Route>
+        <Route path="/home" element={ <Home /> }></Route>
+        <Route path="/reset" element={ <ResetPassword /> }></Route>
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
+  </ChakraProvider>
+  
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
