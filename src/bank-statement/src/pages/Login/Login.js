@@ -1,58 +1,15 @@
-import './Login.css';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Alert, AlertIcon, AlertTitle, AlertDescription } from "@chakra-ui/react";
+import { SaveToken } from '../Service/Token/TokenHandler'
+import { useToast } from '@chakra-ui/react'
+import * as S from './Styled'
+import { Authentication } from '../Service/Login/LoginService'
 
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background: linear-gradient(to bottom, #2c3e50, #3498db);
-`;
-
-const LoginCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 30px;
-  border-radius: 5px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-  background-color: #fff;
-  max-width: 400px;
-`;
-
-const Title = styled.h1`
-  color: #3498db;
-  margin-bottom: 20px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: none;
-  margin-bottom: 10px;
-  width: 100%;
-  background-color: #E0FFFF;
-`;
-
-const Button = styled.button`
-  padding: 15px;
-  border-radius: 5px;
-  border: none;
-  color: #fff;
-  background-color: #3498db;
-  cursor: pointer;
-  display:flex 
-`;
-
-const Login = () => {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showErrorAlert, setShowErrorAlert] = useState(false)
+  const toast = useToast();
 
   function handlerEmail(event){
     setEmail(event.target.value);
@@ -61,36 +18,45 @@ const Login = () => {
   function handlerPassword(event){
     setPassword(event.target.value);
   }
- 
 
-  function handlerSubmit(event){
-      axios.post(`https://localhost:7040/api/v1/login`, { email: email, password: password })
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(error => {
-        
-      });
+  function handlerSubmit(){
+      try {
+        Authentication(email,password);
+
+        toast({
+          title: `Login efetuado com sucesso.`,
+          position: 'top',
+          isClosable: true,
+          status: 'success',
+        });
+      }
+      catch(error){
+        console.log("to no login")
+
+        toast({
+          title: `Usuario ou Senha inexistente`,
+          position: 'top',
+          isClosable: true,
+          status: 'error',
+        })
+      }
   }
-  
-  
 
   return (
-    <LoginContainer>
-      <LoginCard>
-        <Title>Bank Statement</Title>
+    <S.LoginContainer>
+      <S.LoginCard>
+        <S.Title>Bank Statement</S.Title>
 
         <form>
-          <Input type="text" value={email} placeholder="Email" onChange={handlerEmail}/>
-          <Input type="password" value={password} placeholder="Password" onChange={handlerPassword} />
+          <S.Input type="text" value={email} placeholder="Email" onChange={handlerEmail}/>
+          <S.Input type="password" value={password} placeholder="Password" onChange={handlerPassword} />
           <Link to="/reset" style={ {float:'right'}}> Esqueceu a senha?</Link>
-          <Button type="button" onClick={handlerSubmit}>Entrar</Button>
+          <S.Button type="button" onClick={handlerSubmit}>Entrar</S.Button>
         </form>
 
-        
-      </LoginCard>
-    </LoginContainer>
+      </S.LoginCard>
+    </S.LoginContainer>
   );
-  };
+};
 
 export default Login;
